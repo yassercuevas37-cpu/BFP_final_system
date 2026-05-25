@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - BFP Alert</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-header">
+      BFP Alert
+    </div>
+    <div class="sidebar-nav">
+      <a href="/dashboard" class="active"><i class="fas fa-th-large"></i> Dashboard</a>
+      <a href="/auth/profile"><i class="fas fa-user-circle"></i> Profile</a>
+      <a href="/auth/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="top-bar">
+      <h2>Admin Dashboard</h2>
+      <div class="user-display">
+        <span style="font-size: 0.9rem; color: white; font-weight: 600;">Admin: <span style="color: var(--fire-gold);"><%= user.username %></span></span>
+      </div>
+    </div>
+
+    <div class="content-padding">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon total">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Total Reports</span>
+            <span class="stat-value"><%= stats.totalReports %></span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon pending">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Pending</span>
+            <span class="stat-value"><%= stats.pending %></span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon responding">
+            <i class="fas fa-truck-moving"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Responding</span>
+            <span class="stat-value"><%= stats.responding %></span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon resolved">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Resolved</span>
+            <span class="stat-value"><%= stats.resolved %></span>
+          </div>
+        </div>
+      </div>
+
+      <% if (adminRequests && adminRequests.length > 0) { %>
+      <div class="table-container" style="margin-bottom: 30px; border-color: #00bfff;">
+        <div class="table-header" style="background: linear-gradient(180deg, #004080 0%, #002040 100%);">
+          <h3 style="color: #00bfff;"><i class="fas fa-user-shield"></i> Pending Admin Approval Requests</h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Contact Number</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% adminRequests.forEach(reqUser => { %>
+              <tr>
+                <td style="font-weight: bold; color: #00bfff;"><%= reqUser.id %></td>
+                <td><%= reqUser.username %></td>
+                <td><%= reqUser.contact_number %></td>
+                <td><span class="badge" style="background: rgba(0, 191, 255, 0.2); color: #00bfff; border: 1px solid #00bfff;">Pending Admin</span></td>
+                <td>
+                  <div style="display: flex; gap: 10px;">
+                    <form action="/auth/approve-admin/<%= reqUser.id %>" method="POST">
+                      <button type="submit" class="badge" style="background: #28a745; color: white; border: none; cursor: pointer; padding: 5px 10px; border-radius: 4px;"><i class="fas fa-check"></i> Approve</button>
+                    </form>
+                    <form action="/auth/reject-admin/<%= reqUser.id %>" method="POST">
+                      <button type="submit" class="badge" style="background: #dc3545; color: white; border: none; cursor: pointer; padding: 5px 10px; border-radius: 4px;"><i class="fas fa-times"></i> Reject</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% } %>
+
+      <div class="table-container" style="margin-bottom: 30px; border-color: #ffcc00;">
+        <div class="table-header" style="background: linear-gradient(180deg, #665200 0%, #332900 100%);">
+          <h3 style="color: #ffcc00;"><i class="fas fa-users-cog"></i> Registered Administrators</h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Contact Number</th>
+              <th>Role</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (allAdmins && allAdmins.length > 0) { %>
+              <% allAdmins.forEach(admin => { %>
+                <tr>
+                  <td style="font-weight: bold; color: #ffcc00;"><%= admin.id %></td>
+                  <td><%= admin.username %></td>
+                  <td><%= admin.contact_number %></td>
+                  <td><span class="badge" style="background: rgba(255, 204, 0, 0.1); color: #ffcc00; border: 1px solid #ffcc00;">ADMIN</span></td>
+                  <td><span class="badge" style="background: rgba(40, 167, 69, 0.2); color: #28a745; border: 1px solid #28a745;">Active</span></td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr>
+                <td colspan="5" style="text-align:center; padding: 20px; color: var(--text-muted);">No administrators found.</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-container">
+        <div class="table-header">
+          <h3><i class="fas fa-fire-extinguisher"></i> Fire Report Management</h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Reporter</th>
+              <th>Location</th>
+              <th>Severity</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (reports.length === 0) { %>
+              <tr>
+                <td colspan="6" style="text-align:center; padding: 30px; color: var(--text-muted);">No reports received yet.</td>
+              </tr>
+            <% } else { %>
+              <% reports.forEach(report => { %>
+                <tr>
+                  <td style="font-weight: bold; color: var(--fire-gold);"><%= report.report_id %></td>
+                  <td><%= report.full_name %></td>
+                  <td><%= report.incident_location %></td>
+                  <td>
+                    <span class="badge severity-<%= report.severity.toLowerCase() %>">
+                      <%= report.severity %>
+                    </span>
+                  </td>
+                  <td>
+                    <form action="/reports/update-status/<%= report.id %>" method="POST" style="display:inline;">
+                      <select name="status" onchange="this.form.submit()" style="padding: 6px 12px; font-size: 0.75rem; border: 1px solid var(--fire-gold); border-radius: 6px; background: rgba(0,0,0,0.4); color: white; font-weight: 600; outline: none;">
+                        <option value="Pending" <%= report.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                        <option value="Responding" <%= report.status === 'Responding' ? 'selected' : '' %>>Responding</option>
+                        <option value="Resolved" <%= report.status === 'Resolved' ? 'selected' : '' %>>Resolved</option>
+                      </select>
+                    </form>
+                  </td>
+                  <td>
+                    <div style="display: flex; gap: 12px;">
+                      <a href="/reports/details/<%= report.id %>" style="color: #00bfff; text-decoration: none; font-size: 1rem;" title="View Details"><i class="fas fa-eye"></i></a>
+                      <form action="/reports/delete/<%= report.id %>" method="POST" style="display:inline;" onsubmit="return confirm('Delete this report?')">
+                        <button type="submit" style="background: none; border: none; color: #ff4d4d; cursor: pointer; padding: 0; font-size: 1rem;" title="Delete Report"><i class="fas fa-trash"></i></button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

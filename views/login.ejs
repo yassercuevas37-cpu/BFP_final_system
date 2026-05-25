@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BFP Login</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      height: 100vh;
+      background-image: url('/images/login-bg.png');
+      background-size: cover;
+      background-position: center;
+      margin: 0;
+      padding-left: 10%;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(270deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 100%);
+      z-index: 1;
+    }
+    .login-container {
+      background: rgba(26, 26, 26, 0.9);
+      padding: 30px 20px;
+      border-radius: 25px;
+      box-shadow: 0 0 50px rgba(0,0,0,0.5);
+      width: 100%;
+      max-width: 3in;
+      z-index: 2;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+    .logo-img {
+      width: 120px;
+      margin-bottom: 20px;
+    }
+    .system-title {
+      color: #ff3333;
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin: 0;
+      letter-spacing: 2px;
+      line-height: 1;
+    }
+    .system-subtitle {
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 10px 0;
+      letter-spacing: 1px;
+    }
+    .system-tagline {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.85rem;
+      margin-bottom: 30px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .form-group i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,0.5);
+    }
+    .form-group input {
+      width: 100%;
+      padding: 15px 15px 15px 45px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      outline: none;
+      box-sizing: border-box;
+      color: white;
+      font-size: 1rem;
+    }
+    .form-group input:focus {
+      border-color: #ff3333;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .password-toggle {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+    }
+    .form-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+    }
+    .form-options a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+    }
+    .btn-login {
+      width: 100%;
+      padding: 16px;
+      background: #e63946;
+      border: none;
+      color: white;
+      border-radius: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      transition: all 0.3s;
+    }
+    .btn-login:hover {
+      background: #d62828;
+      transform: translateY(-2px);
+    }
+    .footer-text {
+      margin-top: 40px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .wavy-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1;
+    }
+    .error {
+      background: rgba(255, 51, 51, 0.2);
+      color: #ff3333;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 0.85rem;
+      border: 1px solid rgba(255, 51, 51, 0.3);
+    }
+    .register-link {
+      margin-top: 20px;
+      display: block;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      font-size: 0.85rem;
+    }
+    .register-link span {
+      color: #ff3333;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <img src="/images/logo.jpg" alt="BFP Logo" class="logo-img">
+    <h1 class="system-title">BFP</h1>
+    <h2 class="system-subtitle">NOTIFICATION SYSTEM</h2>
+    <p class="system-tagline">Safeguarding Lives and Protecting Communities</p>
+
+    <% if (error) { %>
+      <div class="error"><%= error %></div>
+    <% } %>
+
+    <form action="/auth/login" method="POST">
+      <div class="form-group">
+        <i class="fas fa-user"></i>
+        <input type="text" name="username" required placeholder="Username">
+      </div>
+      <div class="form-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" name="password" id="password" required placeholder="Password">
+        <i class="fas fa-eye-slash password-toggle" onclick="togglePassword()"></i>
+      </div>
+      
+      <div class="form-options">
+        <label><input type="checkbox"> Remember me</label>
+        <a href="#">Forgot Password?</a>
+      </div>
+
+      <button type="submit" class="btn-login">LOGIN</button>
+    </form>
+
+    <a href="/auth/register" class="register-link">Don't have an account? <span>Register here</span></a>
+
+    <div class="footer-text">
+      <i class="fas fa-shield-alt"></i> BFP • DEDICATION • PROTECTION • SERVICE
+    </div>
+  </div>
+
+  <svg class="wavy-bottom" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 120H1440V40C1440 40 1200 120 720 120C240 120 0 0 0 0V120Z" fill="#800000"/>
+    <path d="M0 120H1440V60C1440 60 1100 120 720 120C340 120 0 20 0 20V120Z" fill="#ff3333" fill-opacity="0.3"/>
+  </svg>
+
+  <script>
+    function togglePassword() {
+      const passwordField = document.getElementById('password');
+      const toggleIcon = document.querySelector('.password-toggle');
+      if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+      } else {
+        passwordField.type = 'password';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+      }
+    }
+  </script>
+</body>
+</html>

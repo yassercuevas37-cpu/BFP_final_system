@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard - BFP Alert</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-header">
+      BFP Alert
+    </div>
+    <div class="sidebar-nav">
+      <a href="/dashboard" class="active"><i class="fas fa-th-large"></i> Dashboard</a>
+      <a href="/submit-report"><i class="fas fa-file-medical"></i> Submit Report</a>
+      <a href="/auth/profile"><i class="fas fa-user-circle"></i> Profile</a>
+      <a href="/auth/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="top-bar">
+      <h2>User Dashboard</h2>
+      <div class="user-display">
+        <span style="font-size: 0.9rem; color: white; font-weight: 600;">Welcome, <span style="color: var(--fire-gold);"><%= user.username %></span></span>
+      </div>
+    </div>
+
+    <div class="content-padding">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon total">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">My Total Reports</span>
+            <span class="stat-value"><%= stats.total %></span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon pending">
+            <i class="far fa-clock"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Pending</span>
+            <span class="stat-value"><%= reports.filter(r => r.status === 'Pending').length %></span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon resolved">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Resolved</span>
+            <span class="stat-value"><%= stats.resolved %></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <div class="table-header">
+          <h3>My Report History</h3>
+          <a href="/submit-report" style="background: linear-gradient(90deg, #800000 0%, #ff0000 100%); color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 800; border: 1px solid var(--fire-gold); letter-spacing: 1px; text-transform: uppercase;">Submit New Report</a>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Report ID</th>
+              <th>Location</th>
+              <th>Severity</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (reports.length === 0) { %>
+              <tr>
+                <td colspan="6" style="text-align:center; padding: 40px; color: var(--text-muted);">No reports found.</td>
+              </tr>
+            <% } else { %>
+              <% reports.forEach(report => { %>
+                <tr>
+                  <td style="font-weight: bold; color: var(--fire-gold);"><%= report.report_id %></td>
+                  <td><%= report.incident_location %></td>
+                  <td>
+                    <span class="badge severity-<%= report.severity.toLowerCase() %>">
+                      <%= report.severity %>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="status-badge status-<%= report.status.toLowerCase().replace(' ', '-') %>">
+                      <%= report.status %>
+                    </span>
+                  </td>
+                  <td style="color: #ccc;"><%= new Date(report.createdAt).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }) %></td>
+                  <td>
+                    <div style="display: flex; gap: 15px;">
+                      <a href="/reports/details/<%= report.id %>" style="color: #00bfff; text-decoration: none; font-weight: 800; font-size: 0.85rem; text-transform: uppercase;">Details</a>
+                      <a href="/reports/edit/<%= report.id %>" style="color: var(--fire-gold); text-decoration: none; font-weight: 800; font-size: 0.85rem; text-transform: uppercase;">Edit</a>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

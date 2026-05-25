@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Details - BFP Alert</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    .details-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+    .details-box {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: var(--shadow-dark);
+      border: 1px solid var(--fire-gold);
+    }
+    .details-box h3 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      border-bottom: 1px solid rgba(255, 204, 0, 0.3);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      color: var(--fire-gold);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .info-item {
+      margin-bottom: 18px;
+    }
+    .info-label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--fire-gold);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+    }
+    .info-value {
+      font-size: 1.05rem;
+      color: white;
+    }
+    .report-img {
+      max-width: 100%;
+      border-radius: 10px;
+      border: 1px solid var(--fire-gold);
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+    .no-img {
+      background: rgba(0,0,0,0.3);
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      border: 1px dashed var(--fire-gold);
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-header">
+      BFP Alert
+    </div>
+    <div class="sidebar-nav">
+      <a href="/dashboard"><i class="fas fa-th-large"></i> Dashboard</a>
+      <% if (user.role !== 'admin') { %>
+        <a href="/submit-report"><i class="fas fa-file-medical"></i> Submit Report</a>
+      <% } %>
+      <a href="/auth/profile"><i class="fas fa-user-circle"></i> Profile</a>
+      <a href="/auth/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="top-bar">
+      <div style="display: flex; align-items: center;">
+        <a href="/dashboard" style="color: white; margin-right: 15px;"><i class="fas fa-arrow-left"></i></a>
+        <h2>Report Details: <%= report.report_id %></h2>
+      </div>
+      <div class="user-display">
+        <span class="status-badge status-<%= report.status.toLowerCase().replace(' ', '-') %>" style="margin-right: 15px;"><%= report.status %></span>
+        <span style="font-size: 0.9rem; color: white; font-weight: 600;"><%= user.username %></span>
+      </div>
+    </div>
+
+    <div class="content-padding">
+      <div class="details-container">
+        <div class="details-box">
+          <h3>Incident Information</h3>
+          <div class="info-item">
+            <span class="info-label">Full Name</span>
+            <span class="info-value"><%= report.full_name %></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Contact Number</span>
+            <span class="info-value"><%= report.contact_number %></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Location</span>
+            <span class="info-value"><%= report.incident_location %>, <%= report.barangay_city %></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Severity</span>
+            <span class="badge severity-<%= report.severity.toLowerCase() %>"><%= report.severity %></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Description</span>
+            <p style="margin: 0; font-size: 0.9rem; line-height: 1.5;"><%= report.description || 'No additional details provided.' %></p>
+          </div>
+        </div>
+
+        <div class="details-box">
+          <h3>Incident Photo</h3>
+          <% if (report.photo_path) { %>
+            <img src="<%= report.photo_path %>" alt="Incident Photo" class="report-img">
+          <% } else { %>
+            <div class="no-img">No photo attached</div>
+          <% } %>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <div class="table-header">
+          <h3>Reporter's History</h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Location</th>
+              <th>Severity</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% history.forEach(h => { %>
+              <tr <%= h.id === report.id ? 'style="background-color: rgba(255, 204, 0, 0.15);"' : '' %>>
+                <td><%= new Date(h.createdAt).toLocaleDateString() %></td>
+                <td><%= h.incident_location %></td>
+                <td><span class="badge severity-<%= h.severity.toLowerCase() %>"><%= h.severity %></span></td>
+                <td><span class="status-badge status-<%= h.status.toLowerCase().replace(' ', '-') %>"><%= h.status %></span></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

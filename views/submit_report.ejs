@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit Fire Report - BFP Alert</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-header">
+      BFP Alert
+    </div>
+    <div class="sidebar-nav">
+      <a href="/dashboard"><i class="fas fa-th-large"></i> Dashboard</a>
+      <a href="/submit-report" class="active"><i class="fas fa-file-medical"></i> Submit Report</a>
+      <a href="/auth/profile"><i class="fas fa-user-circle"></i> Profile</a>
+      <a href="/auth/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="top-bar">
+      <h2>Submit Fire Incident Report</h2>
+      <div class="user-display">
+        <span style="font-size: 0.9rem; color: white; font-weight: 600;">Reporter: <span style="color: var(--fire-gold);"><%= user.username %></span></span>
+      </div>
+    </div>
+
+    <div class="content-padding">
+      <div class="form-container">
+        <div class="form-header">
+          <h3>EMERGENCY FIRE REPORT FORM</h3>
+          <p>Please fill out all fields accurately for rapid response.</p>
+        </div>
+        <div class="form-body">
+          <form action="/reports/submit" method="POST" enctype="multipart/form-data">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="full_name" value="<%= user.username %>" required>
+              </div>
+              <div class="form-group">
+                <label>Contact Number</label>
+                <input type="text" name="contact_number" required placeholder="09123456789">
+              </div>
+              <div class="form-group">
+                <label>Incident Location (Street/Bldg)</label>
+                <input type="text" name="incident_location" required placeholder="123 Mabini St.">
+              </div>
+              <div class="form-group">
+                <label>Barangay / City</label>
+                <input type="text" name="barangay_city" required placeholder="Barangay 66, Manila">
+              </div>
+              <div class="form-group">
+                <label>Fire Severity Level</label>
+                <select name="severity" required>
+                  <option value="" disabled selected>Select Severity</option>
+                  <option value="Low">Low (Smoke/Small Fire)</option>
+                  <option value="Medium">Medium (Developing Fire)</option>
+                  <option value="High">High (Structure on Fire)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Upload Photo (Optional)</label>
+                <input type="file" name="photo" accept="image/*">
+                <span style="font-size: 0.65rem; color: var(--text-muted); display: block; margin-top: 5px;">Max size: 2MB (JPG, PNG)</span>
+              </div>
+              <div class="form-group full-width">
+                <label>Description / Additional Details</label>
+                <textarea name="description" rows="4" placeholder="Provide details about the fire (e.g., trapped people, hazardous materials, nearby hydrants)"></textarea>
+              </div>
+            </div>
+            <button type="submit" class="btn-submit">SUBMIT EMERGENCY REPORT</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

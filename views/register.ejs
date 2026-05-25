@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BFP Register</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: var(--dark-bg);
+      background-image: radial-gradient(circle at center, #2b0a05 0%, #0a0a0c 100%);
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .register-container {
+      background: var(--card-bg);
+      padding: 0;
+      border-radius: 15px;
+      box-shadow: 0 0 50px rgba(0,0,0,0.8);
+      width: 100%;
+      max-width: 450px;
+      overflow: hidden;
+      border: 2px solid var(--fire-gold);
+    }
+    .register-header {
+      background: linear-gradient(180deg, #800000 0%, #400000 100%);
+      color: var(--fire-gold);
+      padding: 40px 30px;
+      text-align: center;
+      border-bottom: 2px solid var(--fire-gold);
+    }
+    .register-header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+    }
+    .register-header p {
+      margin: 10px 0 0;
+      font-size: 0.9rem;
+      color: white;
+      font-weight: 600;
+    }
+    .register-body {
+      padding: 40px 30px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      color: var(--fire-gold);
+      margin-bottom: 10px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 204, 0, 0.4);
+      border-radius: 8px;
+      outline: none;
+      box-sizing: border-box;
+      font-size: 1rem;
+      color: white;
+      transition: all 0.3s;
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--fire-gold);
+      box-shadow: 0 0 15px rgba(255, 204, 0, 0.3);
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .btn-register {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(90deg, #800000 0%, #ff0000 100%);
+      border: 1px solid var(--fire-gold);
+      color: white;
+      border-radius: 10px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      margin-top: 15px;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    }
+    .btn-register:hover {
+      background: linear-gradient(90deg, #a00000 0%, #ff3333 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4);
+    }
+    .error {
+      background-color: rgba(255, 0, 0, 0.2);
+      color: #ff4d4d;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      font-size: 0.85rem;
+      text-align: center;
+      border: 1px solid #ff0000;
+    }
+    .login-link {
+      margin-top: 25px;
+      display: block;
+      color: var(--text-muted);
+      text-decoration: none;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .login-link span {
+      color: var(--fire-gold);
+      font-weight: 800;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <div class="register-header">
+      <h1>CREATE ACCOUNT</h1>
+      <p>Join the BFP Fire Alert System</p>
+    </div>
+    <div class="register-body">
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="error"><%= error %></div>
+      <% } %>
+      <form action="/auth/register" method="POST">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" name="username" required placeholder="Choose a username">
+        </div>
+        <div class="form-group">
+          <label>Contact Number</label>
+          <input type="text" name="contact_number" required placeholder="e.g. 09123456789">
+        </div>
+        <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+          <input type="checkbox" name="adminRequest" id="adminRequest" style="width: auto; cursor: pointer;">
+          <label for="adminRequest" style="margin-bottom: 0; cursor: pointer; text-transform: none; font-size: 0.9rem; color: white;">Request Admin Access</label>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="password" required placeholder="Create a password">
+        </div>
+        <button type="submit" class="btn-register">REGISTER</button>
+      </form>
+      <a href="/auth/login" class="login-link">Already have an account? <span>Sign in here</span></a>
+    </div>
+  </div>
+</body>
+</html>
