@@ -22,17 +22,21 @@ app.set('view engine', 'ejs');
 
 // Session
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'bfp-secret-key',
+  secret: process.env.SESSION_SECRET || 'bfp-fire-alert-system-secret-key-2026',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false } // Set to true if using HTTPS
+  cookie: { 
+    secure: false, // Set to true if using HTTPS
+    maxAge: 1000 * 60 * 60 * 24 // 1 day
+  }
 }));
 
 // Sync Database
+console.log('[DB] Attempting to sync database...');
 sequelize.sync({ force: false }).then(() => {
-  console.log('Database synced');
+  console.log('[DB] Database synced successfully');
 }).catch(err => {
-  console.error('Failed to sync database:', err);
+  console.error('[DB] Failed to sync database:', err);
 });
 
 // Routes

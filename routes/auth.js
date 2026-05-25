@@ -25,15 +25,42 @@ router.get('/register', (req, res) => {
 // Login Action
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
+  console.log(`[AUTH] Login attempt for username: ${username}`);
+  
   try {
     const user = await User.findOne({ where: { username } });
-    if (user && await bcrypt.compare(password, user.password)) {
-      req.session.user = { id: user.id, username: user.username, role: user.role };
-      res.redirect('/dashboard');
+    
+    if (!user) {
+      console.log(`[AUTH] User not found: ${username}`);
+      return res.render('login', { error: 'Invalid username or password' });
+    }
+
+    console.log(`[AUTH] User found: ${user.username}, hashing/comparing password...`);
+    const isMatch = await bcrypt.compare(password, user.password);
+    
+    if (isMatch) {
+      console.log(`[AUTH] Password match for: ${username}`);
+      req.session.user = { 
+        id: user.id, 
+        username: user.username, 
+        role: user.role 
+      };
+      
+      // Save session explicitly to avoid race conditions with redirect
+      req.session.save((err) => {
+        if (err) {
+          console.error(`[AUTH] Session save error:`, err);
+          return res.render('login', { error: 'An error occurred during session creation' });
+        }
+        console.log(`[AUTH] Session created for: ${username}, redirecting to dashboard`);
+        res.redirect('/dashboard');
+      });
     } else {
+      console.log(`[AUTH] Password mismatch for: ${username}`);
       res.render('login', { error: 'Invalid username or password' });
     }
   } catch (err) {
+    console.error(`[AUTH] Login error:`, err);
     res.render('login', { error: 'An error occurred during login' });
   }
 });
